@@ -16,21 +16,29 @@ export default function RootLayout({
   return (
     <html lang ="ja">
       <body>
-        <header className = "bg-blue-600 text-white p-4">
-          <h1 className = "text-2xl font-bold">東方求徹区</h1>
-          {/*ナビゲーションなどをここに追加*/}
-          <nav>
-            <ul className = "flex space-x-4">
-              <li><a href = "/" className="hover:underline">ホーム</a></li>
-              <li><a href = "/about" className="hover:underline">サークル紹介</a></li>
-              <li><a href = "/work" className = "hover:underline">作品ギャラリー</a></li>
-              {/*他のページのリンク*/}
-            </ul>
-          </nav>
+        <header className = "fixed top-0 left-0 w-full bg-blue-600 text-white p-4 z-50">
+          <div className="flex items-center justify-between">
+            <h1 className = "text-2xl font-bold">東方求徹区</h1>
+            <nav>
+              <ul className = "flex space-x-4">
+                <li><a href = "/" className="hover:underline">ホーム</a></li>
+                <li><a href = "/about" className="hover:underline">サークル紹介</a></li>
+                <li><a href = "/work" className = "hover:underline">作品ギャラリー</a></li>
+                {/*他のページのリンク*/}
+              </ul>
+            </nav>
+          </div>
         </header>
 
-        <main className="container mx-auto p-4">
-          {children}{/*ここに各ページのコンテンツが表示される*/}
+        <main className="container mx-auto p-4 min-h-screen bg-cover bg-center bg-no-repeat pt-24" 
+              style={{
+                backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url(/images/icon.jpg)', 
+                backgroundAttachment: 'fixed',
+                backgroundSize: '40% auto'
+              }}>
+          <div className="p-6">
+            {children}{/*ここに各ページのコンテンツが表示される*/}
+          </div>
         </main>
 
         <footer className="bg-gray-800 text-white p-4 text-center mt-8">
