@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Noto_Serif_JP } from "next/font/google";
+import Link from "next/link";
 import "./globals.css";
 import Image from "next/image";
+
+const notoSerifJP = Noto_Serif_JP({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+});
 
 export const metadata = {
   title:'東方求徹区',
@@ -16,14 +22,14 @@ export default function RootLayout({
   return (
     <html lang ="ja">
       <body>
-        <header className = "fixed top-0 left-0 w-full bg-blue-600 text-white p-4 z-50">
+        <header className = "fixed top-0 left-0 w-full bg-blue-900 text-white p-4 z-50">
           <div className="flex items-center justify-between">
-            <h1 className = "text-2xl font-bold">東方求徹区</h1>
+            <h1 className={`text-2xl font-bold ${notoSerifJP.className}`}>東方求徹区</h1>
             <nav>
               <ul className = "flex space-x-4">
-                <li><a href = "/" className="hover:underline">ホーム</a></li>
-                <li><a href = "/about" className="hover:underline">サークル紹介</a></li>
-                <li><a href = "/work" className = "hover:underline">作品ギャラリー</a></li>
+                <li><Link href="/" className="hover:underline">ホーム</Link></li>
+                <li><Link href="/about" className="hover:underline">サークル紹介</Link></li>
+                <li><Link href="/work" className="hover:underline">作品ギャラリー</Link></li>
                 {/*他のページのリンク*/}
               </ul>
             </nav>
