@@ -85,11 +85,22 @@ export function WorkCard({ work }: WorkCardProps) {
       
       {/* 音楽ファイルの場合は音符アイコンと再生ボタンを表示 */}
       {isAudio && (
-        <div className="h-24 md:h-32 mb-3 rounded bg-gradient-to-br from-blue-100 to-purple-100 flex flex-col items-center justify-center">
-          <div className="text-2xl md:text-4xl mb-1 md:mb-2">🎵</div>
-          <div className="text-xs md:text-sm text-gray-600 mb-1 md:mb-2">音楽ファイル</div>
-          <audio controls className="w-full max-w-xs text-sm">
+        <div className="h-auto mb-3 rounded bg-gradient-to-br from-blue-100 to-purple-100 p-3">
+          <div className="text-center mb-2">
+            <div className="text-2xl md:text-4xl mb-1">🎵</div>
+            <div className="text-xs md:text-sm text-gray-600">音楽ファイル</div>
+            <div className="text-sm font-medium text-gray-800 mt-1">{work.title}</div>
+          </div>
+          <audio 
+            controls 
+            className="w-full text-sm"
+            preload="metadata"
+            controlsList="nodownload"
+            style={{ maxHeight: '40px' }}
+          >
             <source src={getProxyUrl(work.imageUrl!)} type="audio/mpeg" />
+            <source src={getProxyUrl(work.imageUrl!)} type="audio/mp3" />
+            <source src={getProxyUrl(work.imageUrl!)} type="audio/wav" />
             お使いのブラウザは音声ファイルをサポートしていません。
           </audio>
         </div>

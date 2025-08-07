@@ -26,12 +26,29 @@ export async function GET(request: NextRequest) {
       }, { status: response.status });
     }
 
-    const contentType = response.headers.get('content-type') || 'application/octet-stream';
+    // ファイル拡張子からMIMEタイプを推測
+    const getContentType = (url: string, fallbackType: string) => {
+      const lowerUrl = url.toLowerCase();
+      if (lowerUrl.includes('.mp3')) return 'audio/mpeg';
+      if (lowerUrl.includes('.wav')) return 'audio/wav';
+      if (lowerUrl.includes('.ogg')) return 'audio/ogg';
+      if (lowerUrl.includes('.m4a')) return 'audio/mp4';
+      if (lowerUrl.includes('.aac')) return 'audio/aac';
+      if (lowerUrl.includes('.png')) return 'image/png';
+      if (lowerUrl.includes('.jpg') || lowerUrl.includes('.jpeg')) return 'image/jpeg';
+      if (lowerUrl.includes('.gif')) return 'image/gif';
+      if (lowerUrl.includes('.webp')) return 'image/webp';
+      return fallbackType;
+    };
+
+    const originalContentType = response.headers.get('content-type') || 'application/octet-stream';
+    const contentType = getContentType(fileUrl, originalContentType);
     const data = await response.arrayBuffer();
 
     console.log('File proxied successfully:', {
       url: fileUrl,
-      contentType,
+      originalContentType,
+      finalContentType: contentType,
       size: data.byteLength
     });
 
@@ -39,10 +56,15 @@ export async function GET(request: NextRequest) {
       status: 200,
       headers: {
         'Content-Type': contentType,
+        'Content-Length': data.byteLength.toString(),
+        'Accept-Ranges': 'bytes',
         'Cache-Control': 'public, max-age=3600',
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET',
-        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Headers': 'Content-Type, Range',
+        // ライブストリーム表示を防ぐためのヘッダー
+        'X-Content-Type-Options': 'nosniff',
+        'Content-Disposition': 'inline',
       },
     });
   } catch (error) {
