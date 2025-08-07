@@ -24,25 +24,25 @@ export default function RootLayout({
       <body>
         <header className = "fixed top-0 left-0 w-full bg-blue-900 text-white p-4 z-50">
           <div className="flex items-center justify-between">
-            <h1 className={`text-2xl font-bold ${notoSerifJP.className}`}>東方求徹区</h1>
+            <h1 className={`text-xl md:text-2xl font-bold ${notoSerifJP.className}`}>東方求徹区</h1>
             <nav>
-              <ul className = "flex space-x-4">
+              <ul className = "flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 text-sm md:text-base">
                 <li><Link href="/" className="hover:underline">ホーム</Link></li>
-                <li><Link href="/about" className="hover:underline">サークル紹介</Link></li>
-                <li><Link href="/work" className="hover:underline">作品ギャラリー</Link></li>
+                <li><Link href="/about" className="hover:underline whitespace-nowrap">サークル紹介</Link></li>
+                <li><Link href="/work" className="hover:underline whitespace-nowrap">作品ギャラリー</Link></li>
                 {/*他のページのリンク*/}
               </ul>
             </nav>
           </div>
         </header>
 
-        <main className="container mx-auto p-4 min-h-screen bg-cover bg-center bg-no-repeat pt-24" 
+        <main className="container mx-auto p-2 md:p-4 min-h-screen bg-cover bg-center bg-no-repeat pt-20 md:pt-24" 
               style={{
-                backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url(/images/icon.jpg)', 
-                backgroundAttachment: 'fixed',
-                backgroundSize: '40% auto'
+                backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)), url(/images/icon.jpg)', 
+                backgroundAttachment: 'scroll',
+                backgroundSize: 'cover'
               }}>
-          <div className="p-6">
+          <div className="p-2 md:p-6">
             {children}{/*ここに各ページのコンテンツが表示される*/}
           </div>
         </main>

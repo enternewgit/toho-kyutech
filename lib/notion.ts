@@ -42,6 +42,7 @@ export async function getWorksFromNotion(): Promise<WorkItem[]> {
   }
 
   try {
+    console.log('Fetching from Notion database:', process.env.NOTION_DATABASE_ID);
     const response = await notion.databases.query({
       database_id: process.env.NOTION_DATABASE_ID,
       sorts: [
@@ -52,8 +53,12 @@ export async function getWorksFromNotion(): Promise<WorkItem[]> {
       ],
     });
 
-    const works: WorkItem[] = response.results.map((page: any) => {
-      const properties = page.properties;
+    console.log('Notion response received, results count:', response.results.length);
+
+    const works: WorkItem[] = [];
+    
+    for (const page of response.results) {
+      const properties = (page as any).properties;
       
       // カテゴリのマッピングを改善
       const rawCategory = properties['選択']?.select?.name;
@@ -68,21 +73,62 @@ export async function getWorksFromNotion(): Promise<WorkItem[]> {
           category = 'music';
         }
       }
+
+      // ファイルURLを取得（改良版）
+      let fileUrl = properties['ファイル&メディア']?.files?.[0]?.file?.url || 
+                   properties['ファイル&メディア']?.files?.[0]?.external?.url;
+
+      // ページの詳細内容も取得してファイルを探す（必要な場合）
+      if (!fileUrl) {
+        try {
+          const pageBlocks = await notion.blocks.children.list({
+            block_id: (page as any).id,
+          });
+          
+          // ブロック内のファイルを探す
+          for (const block of pageBlocks.results) {
+            const blockData = block as any;
+            if (blockData.type === 'image' && blockData.image?.file?.url) {
+              fileUrl = blockData.image.file.url;
+              console.log('Found image in blocks for:', properties['名前']?.title?.[0]?.plain_text);
+              break;
+            } else if (blockData.type === 'audio' && blockData.audio?.file?.url) {
+              fileUrl = blockData.audio.file.url;
+              console.log('Found audio in blocks for:', properties['名前']?.title?.[0]?.plain_text);
+              break;
+            }
+          }
+        } catch (blockError) {
+          console.error('Error fetching blocks for page:', (page as any).id, blockError);
+        }
+      }
+
+      if (fileUrl) {
+        console.log('File URL found for:', properties['名前']?.title?.[0]?.plain_text || 'Untitled', fileUrl);
+      } else {
+        console.log('No file URL for:', properties['名前']?.title?.[0]?.plain_text || 'Untitled');
+      }
       
-      return {
-        id: page.id,
+      works.push({
+        id: (page as any).id,
         title: properties['名前']?.title?.[0]?.plain_text || 'Untitled',
         description: properties['テキスト']?.rich_text?.[0]?.plain_text || '',
         category,
-        imageUrl: properties['ファイル&メディア']?.files?.[0]?.file?.url || properties['ファイル&メディア']?.files?.[0]?.external?.url,
+        imageUrl: fileUrl,
         tags: properties['テキスト 1']?.rich_text?.map((text: any) => text.plain_text) || [],
-        createdAt: properties['日付']?.date?.start || page.created_time,
-      };
-    });
+        createdAt: properties['日付']?.date?.start || (page as any).created_time,
+      });
+    }
 
+    console.log('Processed works:', works.length);
     return works;
   } catch (error) {
     console.error('Error fetching from Notion:', error);
+    // エラーの詳細を取得
+    if (error instanceof Error) {
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
+    }
     return [];
   }
 }
