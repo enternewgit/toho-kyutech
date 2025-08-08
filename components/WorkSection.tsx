@@ -28,7 +28,14 @@ export function WorkCard({ work }: WorkCardProps) {
   const showImage = work.imageUrl && isImageFile(work.imageUrl) && !imageError;
   const isAudio = work.imageUrl && isAudioFile(work.imageUrl);
 
-  // プロキシURL経由でファイルにアクセス
+  // プロキシURL経由でファイルにアクセス（期限切れ対応版）
+  const getFreshUrl = (work: WorkItem) => {
+    // PageIDを使って動的にファイルを取得
+    const fileType = isImageFile(work.imageUrl) ? 'image' : 'audio';
+    return `/api/fresh-file?pageId=${encodeURIComponent(work.pageId)}&type=${fileType}`;
+  };
+
+  // フォールバック用の従来のプロキシURL
   const getProxyUrl = (originalUrl: string) => {
     if (originalUrl.includes('amazonaws.com') || originalUrl.includes('notion')) {
       return `/api/proxy-file?url=${encodeURIComponent(originalUrl)}`;
@@ -49,7 +56,8 @@ export function WorkCard({ work }: WorkCardProps) {
     title: work.title,
     hasImageUrl: !!work.imageUrl,
     imageUrl: work.imageUrl,
-    proxyUrl: work.imageUrl ? getProxyUrl(work.imageUrl) : null,
+    pageId: work.pageId,
+    freshUrl: getFreshUrl(work),
     isImage: isImageFile(work.imageUrl),
     isAudio: isAudioFile(work.imageUrl),
     imageError
@@ -59,9 +67,9 @@ export function WorkCard({ work }: WorkCardProps) {
     <div className="border rounded-lg p-3 md:p-4 bg-white/90 hover:bg-white/95 transition-colors">
       {showImage && (
         <div className="relative h-24 md:h-32 mb-3 rounded overflow-hidden">
-          {/* Next.js Image コンポーネントを試す */}
+          {/* Next.js Image コンポーネントを試す（新鮮なURL使用） */}
           <Image
-            src={getProxyUrl(work.imageUrl!)}
+            src={getFreshUrl(work)}
             alt={work.title}
             fill
             className="object-cover"
@@ -75,10 +83,10 @@ export function WorkCard({ work }: WorkCardProps) {
       {imageError && work.imageUrl && isImageFile(work.imageUrl) && (
         <div className="h-24 md:h-32 mb-3 rounded overflow-hidden bg-gray-100 flex items-center justify-center">
           <img
-            src={getProxyUrl(work.imageUrl)}
+            src={getFreshUrl(work)}
             alt={work.title}
             className="max-h-full max-w-full object-cover"
-            onError={() => console.log('img tag also failed')}
+            onError={() => console.log('Fresh URL also failed, trying fallback:', getProxyUrl(work.imageUrl!))}
           />
         </div>
       )}
@@ -98,9 +106,11 @@ export function WorkCard({ work }: WorkCardProps) {
             controlsList="nodownload"
             style={{ maxHeight: '40px' }}
           >
+            <source src={getFreshUrl(work)} type="audio/mpeg" />
+            <source src={getFreshUrl(work)} type="audio/mp3" />
+            <source src={getFreshUrl(work)} type="audio/wav" />
+            {/* フォールバック用 */}
             <source src={getProxyUrl(work.imageUrl!)} type="audio/mpeg" />
-            <source src={getProxyUrl(work.imageUrl!)} type="audio/mp3" />
-            <source src={getProxyUrl(work.imageUrl!)} type="audio/wav" />
             お使いのブラウザは音声ファイルをサポートしていません。
           </audio>
         </div>

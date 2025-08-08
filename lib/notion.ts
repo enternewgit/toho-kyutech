@@ -11,6 +11,7 @@ export interface WorkItem {
   description: string;
   category: 'music' | 'illustration' | 'doujinshi';
   imageUrl?: string;
+  pageId: string; // NotionページIDを追加
   tags?: string[];
   createdAt: string;
 }
@@ -115,6 +116,7 @@ export async function getWorksFromNotion(): Promise<WorkItem[]> {
         description: properties['テキスト']?.rich_text?.[0]?.plain_text || '',
         category,
         imageUrl: fileUrl,
+        pageId: (page as any).id, // ページIDを保存
         tags: properties['テキスト 1']?.rich_text?.map((text: any) => text.plain_text) || [],
         createdAt: properties['日付']?.date?.start || (page as any).created_time,
       });
