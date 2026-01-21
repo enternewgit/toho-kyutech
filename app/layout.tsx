@@ -67,8 +67,7 @@ export const metadata: Metadata = {
     apple: '/images/icon.jpg',
   },
   verification: {
-    // Google Search Console の確認コードをここに追加（取得後）
-    // google: 'your-google-verification-code',
+    google: 'yE-mlABDUMd-UqIOxy5_6XVhNahGu6r-YXfrFL6UlqA',
   },
 };
 
