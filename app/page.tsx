@@ -1,6 +1,18 @@
 import Script from 'next/script';
 import { getActivitiesFromNotion } from '@/lib/activities';
 import { ActivityTimeline } from '@/components/ActivityTimeline';
+import type { Metadata } from 'next';
+
+export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: '東方求徹区 | 九州工業大学 東方Projectサークル',
+  description: '九州工業大学の東方Projectサークル「東方求徹区」の公式ホームページです。例大祭への参加、東方アレンジCD・同人誌の制作、ゲーム対戦会など、東方を楽しむ活動を行っています。',
+  openGraph: {
+    title: '東方求徹区 | 九州工業大学 東方Projectサークル',
+    description: '九州工業大学の東方Projectサークル「東方求徹区」の公式ホームページです。例大祭への参加、東方アレンジCD・同人誌の制作、ゲーム対戦会など、東方を楽しむ活動を行っています。',
+  },
+};
 
 export default async function Home(){
   // 活動記録データを取得

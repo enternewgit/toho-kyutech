@@ -1,17 +1,75 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Noto_Serif_JP } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
 import Image from "next/image";
+
+
 
 const notoSerifJP = Noto_Serif_JP({
   subsets: ['latin'],
   weight: ['400', '700'],
 });
 
-export const metadata = {
-  title:'東方求徹区',
-  description: '東方求徹区の公式ホームページです。'
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+};
+
+export const metadata: Metadata = {
+  title: {
+    default: '東方求徹区 | 九州工業大学 東方Projectサークル',
+    template: '%s | 東方求徹区'
+  },
+  description: '東方求徹区は九州工業大学の東方Projectサークルです。東方の音楽、ゲーム、二次創作を楽しむ学生たちが集まり、例大祭への参加や同人誌制作などの活動を行っています。',
+  keywords: ['東方求徹区', '東方Project', '九州工業大学', '大学サークル', '同人サークル', '例大祭', '東方アレンジ', '同人誌', '九工大', 'きゅーてっく', '東方', 'Touhou Project'],
+  authors: [{ name: '東方求徹区' }],
+  creator: '東方求徹区',
+  publisher: '東方求徹区',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'ja_JP',
+    url: 'https://toho-kyutech.vercel.app/',
+    siteName: '東方求徹区',
+    title: '東方求徹区 | 九州工業大学 東方Projectサークル',
+    description: '東方求徹区は九州工業大学の東方Projectサークルです。東方の音楽、ゲーム、二次創作を楽しむ学生たちが集まり、例大祭への参加や同人誌制作などの活動を行っています。',
+    images: [
+      {
+        url: '/images/icon.jpg',
+        width: 1200,
+        height: 630,
+        alt: '東方求徹区',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@Kyutech_Touhou',
+    creator: '@Kyutech_Touhou',
+    title: '東方求徹区 | 九州工業大学 東方Projectサークル',
+    description: '東方求徹区は九州工業大学の東方Projectサークルです。東方の音楽、ゲーム、二次創作を楽しむ学生たちが集まり、例大祭への参加や同人誌制作などの活動を行っています。',
+    images: ['/images/icon.jpg'],
+  },
+  icons: {
+    icon: '/images/icon.jpg',
+    apple: '/images/icon.jpg',
+  },
+  verification: {
+    // Google Search Console の確認コードをここに追加（取得後）
+    // google: 'your-google-verification-code',
+  },
 };
 
 export default function RootLayout({
@@ -19,8 +77,38 @@ export default function RootLayout({
 }:{
   children: React.ReactNode;
 }) {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: '東方求徹区',
+    alternateName: ['Toho Kyutech', '東方きゅーてっく'],
+    url: 'https://toho-kyutech.vercel.app',
+    logo: 'https://toho-kyutech.vercel.app/images/icon.jpg',
+    description: '九州工業大学の東方Projectサークル',
+    foundingDate: '2010',
+    sameAs: [
+      'https://twitter.com/Kyutech_Touhou',
+    ],
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: '北九州市',
+      addressRegion: '福岡県',
+      addressCountry: 'JP',
+    },
+    parentOrganization: {
+      '@type': 'EducationalOrganization',
+      name: '九州工業大学',
+    },
+  };
+
   return (
     <html lang ="ja">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body>
         <header className = "fixed top-0 left-0 w-full bg-blue-900 text-white p-4 z-50">
           <div className="flex items-center justify-between">

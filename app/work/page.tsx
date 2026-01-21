@@ -1,5 +1,17 @@
 import { getWorksFromNotion, categorizeWorks, debugNotionDatabase } from '@/lib/notion';
 import { WorkSection } from '@/components/WorkSection';
+import type { Metadata } from 'next';
+
+export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: '作品ギャラリー',
+  description: '東方求徹区メンバーの創作作品を紹介します。東方アレンジ音楽、イラスト、同人誌など、さまざまな二次創作作品をご覧いただけます。',
+  openGraph: {
+    title: '作品ギャラリー | 東方求徹区',
+    description: '東方求徹区メンバーの創作作品を紹介します。東方アレンジ音楽、イラスト、同人誌など、さまざまな二次創作作品をご覧いただけます。',
+  },
+};
 
 export default async function Work() {
   // Notionから作品データを取得

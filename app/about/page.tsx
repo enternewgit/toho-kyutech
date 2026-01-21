@@ -1,3 +1,14 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'サークル紹介',
+  description: '東方求徹区のサークル紹介ページです。活動内容、入部方法、定期的な部会、例大祭への参加、東方アレンジCD・同人誌の制作、ゲーム対戦会、学園祭での展示などについてご紹介します。',
+  openGraph: {
+    title: 'サークル紹介 | 東方求徹区',
+    description: '東方求徹区のサークル紹介ページです。活動内容、入部方法、定期的な部会、例大祭への参加、東方アレンジCD・同人誌の制作、ゲーム対戦会、学園祭での展示などについてご紹介します。',
+  },
+};
+
 export default function About() {
   return (
     <div>

@@ -1,0 +1,21 @@
+# robots.txt for 東方求徹区
+User-agent: *
+Allow: /
+
+# サイトマップの場所
+Sitemap: https://toho-kyutech.vercel.app/sitemap.xml
+
+# クロール制御（必要に応じて調整）
+User-agent: *
+Disallow: /api/
+Disallow: /_next/
+
+# 主要な検索エンジンのクローラーを明示的に許可
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
